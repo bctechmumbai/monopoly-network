@@ -1,0 +1,36 @@
+{% extends 'base_admin.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}
+<title>Add Depot Stock</title>
+{% endblock title %}
+
+{% block content %}
+  
+<div class="container mb-5 mt-5">
+    {% if bcmsg %}
+    <span class="text-success">{{ bcmsg }}</span>
+    {% endif %}
+    {% if error %}
+   <div class="text text-danger">  {{    errorCode }}
+    {{    errorText }}</div>
+    {% elif output %}
+    <span class = "text text-success">{{ output|safe }}</span>
+    {% endif %} 
+
+    <h3 class="text-primary">Add Depot Stock</h3>    
+<form action="{%url 'addstock' %}" class="px-5" method="POST" autocomplete="off">  
+    {% csrf_token %}  
+    <div class="row">
+        <div class="col-lg-4">
+            {{ form|crispy }}  
+        </div>
+    </div>
+    
+    <button type="submit"  class="btn btn-primary b-btn">Save</button>  
+    <!-- <button type="button"  class="btn btn-danger">Cancel</button>   -->
+</form> 
+
+
+</div>
+{%endblock content %}

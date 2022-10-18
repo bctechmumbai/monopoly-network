@@ -1,0 +1,129 @@
+version: "2.4"
+
+
+networks:
+  blockchain_network:
+    external: true
+    name: ${DOCKER_NETWORK_NAME}
+  
+
+services: 
+
+  orderer1:
+
+    extends:
+      file: orderers_base.yaml
+      service: orderer
+
+    container_name: 
+      orderer1.${ORDERER_ORG_NAME}
+    
+    environment:
+      - ORDERER_GENERAL_LISTENPORT=9001
+      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:9006
+    
+    ports:
+      - 9001:9001
+      - 9006:9006
+    
+    volumes:
+      - ${GENESIS_BLOCK_PATH}:/var/hyperledger/orderer/genesisblock/
+      - ${ORDERER_ORG_CRYPTO_PATH}/orderers/orderer1.${ORDERER_ORG_NAME}/msp:/var/hyperledger/orderer/msp
+      - ${ORDERER_ORG_CRYPTO_PATH}/orderers/orderer1.${ORDERER_ORG_NAME}/tls:/var/hyperledger/orderer/tls
+      - ${PROJECT_ROOT_PATH}/productionvolumes/orderer1.${ORDERER_ORG_NAME}:/var/hyperledger/production/orderer/
+
+
+  orderer2:
+
+    extends:
+      file: orderers_base.yaml
+      service: orderer 
+
+    container_name: 
+      orderer2.${ORDERER_ORG_NAME}
+    
+    environment:
+      - ORDERER_GENERAL_LISTENPORT=9002
+      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:9007
+  
+    ports:
+      - 9002:9002
+      - 9007:9007
+
+    volumes:
+      - ${GENESIS_BLOCK_PATH}:/var/hyperledger/orderer/genesisblock/
+      - ${ORDERER_ORG_CRYPTO_PATH}/orderers/orderer2.${ORDERER_ORG_NAME}/msp:/var/hyperledger/orderer/msp
+      - ${ORDERER_ORG_CRYPTO_PATH}/orderers/orderer2.${ORDERER_ORG_NAME}/tls:/var/hyperledger/orderer/tls
+      - ${PROJECT_ROOT_PATH}/productionvolumes/orderer2.${ORDERER_ORG_NAME}:/var/hyperledger/production/orderer/
+    
+   
+  orderer3:
+
+    container_name:
+      orderer3.${ORDERER_ORG_NAME}
+
+    extends:
+      file: orderers_base.yaml
+      service: orderer
+
+    environment:
+      - ORDERER_GENERAL_LISTENPORT=9003
+      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:9008
+
+    ports:
+      - 9003:9003
+      - 9008:9008
+
+    volumes:
+      - ${GENESIS_BLOCK_PATH}:/var/hyperledger/orderer/genesisblock/
+      - ${ORDERER_ORG_CRYPTO_PATH}/orderers/orderer3.${ORDERER_ORG_NAME}/msp:/var/hyperledger/orderer/msp
+      - ${ORDERER_ORG_CRYPTO_PATH}/orderers/orderer3.${ORDERER_ORG_NAME}/tls:/var/hyperledger/orderer/tls
+      - ${PROJECT_ROOT_PATH}/productionvolumes/orderer3.${ORDERER_ORG_NAME}:/var/hyperledger/production/orderer/
+
+  
+  orderer4:
+
+    container_name:
+      orderer4.${ORDERER_ORG_NAME}
+    
+    extends:
+      file: orderers_base.yaml
+      service: orderer
+
+    environment:
+      - ORDERER_GENERAL_LISTENPORT=9004
+      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:9009
+
+    ports:
+      - 9004:9004
+      - 9009:9009
+    
+    volumes:
+      - ${GENESIS_BLOCK_PATH}:/var/hyperledger/orderer/genesisblock/
+      - ${ORDERER_ORG_CRYPTO_PATH}/orderers/orderer4.${ORDERER_ORG_NAME}/msp:/var/hyperledger/orderer/msp
+      - ${ORDERER_ORG_CRYPTO_PATH}/orderers/orderer4.${ORDERER_ORG_NAME}/tls:/var/hyperledger/orderer/tls
+      - ${PROJECT_ROOT_PATH}/productionvolumes/orderer4.${ORDERER_ORG_NAME}:/var/hyperledger/production/orderer/
+  
+ 
+  orderer5:
+  
+    container_name: 
+      orderer5.${ORDERER_ORG_NAME}
+    
+    extends:
+      file: orderers_base.yaml
+      service: orderer
+
+    environment:
+      - ORDERER_GENERAL_LISTENPORT=9005
+      - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:9010
+    
+    ports:
+      - 9005:9005
+      - 9010:9010
+    
+    volumes:
+      - ${GENESIS_BLOCK_PATH}:/var/hyperledger/orderer/genesisblock/
+      - ${ORDERER_ORG_CRYPTO_PATH}/orderers/orderer5.${ORDERER_ORG_NAME}/msp:/var/hyperledger/orderer/msp
+      - ${ORDERER_ORG_CRYPTO_PATH}/orderers/orderer5.${ORDERER_ORG_NAME}/tls:/var/hyperledger/orderer/tls
+      - ${PROJECT_ROOT_PATH}/productionvolumes/orderer5.${ORDERER_ORG_NAME}:/var/hyperledger/production/orderer/

@@ -1,0 +1,31 @@
+version: "2.4"
+
+services:
+
+  webapps-mhbcn-nic-in:
+    container_name: webapps-mhbcn-nic-in
+    image: webapps-mhbcn-nic-in:latest
+    # environment:
+      # - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server      
+    ports:
+      - 80:8020
+    working_dir: /opt/app     
+    extra_hosts:
+      - "webapi.mhbcn.gov.in:10.152.2.122"
+      # - "orderer2.mhbcn.gov.in:10.152.2.122"
+      # - "orderer3.mhbcn.gov.in:10.152.2.122"
+      # - "orderer4.mhbcn.gov.in:10.152.2.122"
+      # - "orderer5.mhbcn.gov.in:10.152.2.122"
+      # - "peer1.fcs.bepds.gov.in:10.152.2.122"   
+      # - "peer2.fcs.bepds.gov.in:10.152.2.122"
+      # - "peer1.fps.bepds.gov.in:10.152.2.122"   
+      # - "peer2.fps.bepds.gov.in:10.152.2.122"
+      # - "peer1.fci.bepds.gov.in:10.152.2.122"   
+      # - "peer2.fci.bepds.gov.in:10.152.2.122"
+      # - "peer1.transport.bepds.gov.in:10.152.2.122"   
+      # - "peer2.transport.bepds.gov.in:10.152.2.122"
+      # - "peer1.treasury.bepds.gov.in:10.152.2.122"   
+      # - "peer2.treasury.bepds.gov.in:10.152.2.122"
+      # - "ca.mhbcn.gov.in:10.152.2.122"
+      # - "tlsca.mhbcn.gov.in:10.152.2.122"
+      

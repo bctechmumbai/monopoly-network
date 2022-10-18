@@ -1,0 +1,65 @@
+{% extends 'base_site.html' %}
+{% block title %}
+    <title>Blockchain Demo Projects | Login </title>
+{% endblock title %}
+
+{% block content %}
+
+<div class="b-bg-image py-5" style="padding-bottom: 50px!important">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 d-flex b-heading-sec">
+                <div class="align-self-center pr-5 b-head-in">
+                    <h1 class="text-right mt-5 b-left-head">Blockchain Demo Projects </h1>
+                </div>
+            </div>
+
+            <div class="col-lg-6 b-login-sec">
+                <div class="d-block px-5 pt-5 pb-4 border-bottom-0">
+                    <h2 class="b-login-head">Log In</h2>
+                </div>
+
+                <div class="">
+                    <form action="{% url 'login' %}" autocomplete="off" method="POST" class="px-5">
+                        {% csrf_token %}
+                       
+                        <div class="form-group ">
+                            <label for="login_email" class="text-white">Email:</label>
+                            <input type="email" value="" class="form-control" id="login_email" placeholder="Enter email" name="login_email">
+                        </div>
+                        <div class="form-group">
+                            <label for="login_pwd" class="text-white">Password:</label>
+                            <input type="password" value="password" class="form-control" id="login_pwd" placeholder="Enter password" name="login_pwd">
+                        </div>
+
+                        {% if incorrect_credential  %}
+
+                        <div class="alert alert-danger" role="alert">
+                            You entered incorrect credentials! Please enter correct username and password.
+                          </div>
+    
+   
+                        {% endif %}
+
+                        {% if errormsg %}
+                            <div class="alert alert-danger" role="alert">
+                            {{ errormsg }}
+                            </div>
+                        {% endif %}
+
+                        <!-- <div class="form-group custom-control custom-checkbox">
+                            <input class="custom-control-input" id="login-rem-1" type="checkbox" name="remember"> 
+                            <label class="custom-control-label text-white" for="login-rem-1">Remember me</label>
+                        </div> -->
+                        <div class="text-center py-4">
+                            <button type="submit" class="btn btn-primary b-btn">Log In</button>
+                        </div>
+                        
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{%endblock content %}

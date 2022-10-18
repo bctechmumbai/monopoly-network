@@ -1,0 +1,25 @@
+# OrganizationalUnitIdentifiers:
+#     - Certificate: "cacerts/ca-mhbcn-gov-in-7032-ca-mhbcn-gov-in.pem"
+#       OrganizationalUnitIdentifier: "fcs"
+#     - Certificate: "cacerts/ca-mhbcn-gov-in-7032-ca-mhbcn-gov-in.pem"
+#       OrganizationalUnitIdentifier: "fci"
+#     - Certificate: "cacerts/ca-mhbcn-gov-in-7032-ca-mhbcn-gov-in.pem"
+#       OrganizationalUnitIdentifier: "fps"
+#     - Certificate: "cacerts/ca-mhbcn-gov-in-7032-ca-mhbcn-gov-in.pem"
+#       OrganizationalUnitIdentifier: "transport"
+#     - Certificate: "cacerts/ca-mhbcn-gov-in-7032-ca-mhbcn-gov-in.pem"
+#       OrganizationalUnitIdentifier: "treasury"  
+NodeOUs:
+  Enable: true  
+  ClientOUIdentifier:
+    Certificate: "cacerts/ca-vyapar-bcngame-in-9032-ca-vyapar-bcngame-in.pem"
+    OrganizationalUnitIdentifier: "client"
+  PeerOUIdentifier:
+    Certificate: "cacerts/ca-vyapar-bcngame-in-9032-ca-vyapar-bcngame-in.pem"
+    OrganizationalUnitIdentifier: "peer"
+  AdminOUIdentifier:
+    Certificate: "cacerts/ca-vyapar-bcngame-in-9032-ca-vyapar-bcngame-in.pem"
+    OrganizationalUnitIdentifier: "admin"
+  OrdererOUIdentifier:
+    Certificate: "cacerts/ca-vyapar-bcngame-in-9032-ca-vyapar-bcngame-in.pem"
+    OrganizationalUnitIdentifier: "orderer"

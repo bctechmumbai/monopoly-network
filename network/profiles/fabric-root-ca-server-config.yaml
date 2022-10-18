@@ -1,0 +1,165 @@
+version: 1.5.2
+port: 7054
+cors:
+    enabled: false
+    origins:
+      - "*" 
+debug: false
+crlsizelimit: 512000
+
+tls:
+  enabled: false
+  certfile:
+  keyfile:
+  clientauth:
+    type: noclientcert
+    certfiles:
+
+ca:
+  name:
+  keyfile:
+  certfile:
+  chainfile:
+  reenrollIgnoreCertExpiry: false
+
+crl:
+  expiry: 48h
+registry:
+  maxenrollments: -1
+  identities:
+     - name: rootcaadmin
+       pass: rootcaadminpw
+       type: client
+       affiliation: ""
+       attrs:
+          hf.Registrar.Roles: "*"
+          hf.Registrar.DelegateRoles: "*"
+          hf.Revoker: true
+          hf.IntermediateCA: true
+          hf.GenCRL: true
+          hf.Registrar.Attributes: "*"
+          hf.AffiliationMgr: true
+db:
+  type: postgres
+  datasource: host=postgres.vyapar.bcngame.in port=5432 user=postgres password=postgres dbname=vyapar_rootca sslmode=disable
+  tls:
+      enabled: false
+      certfiles:
+      client:
+        certfile:
+        keyfile:
+
+ldap:
+   enabled: false
+   url: ldap://<adminDN>:<adminPassword>@<host>:<port>/<base>
+   tls:
+      certfiles:
+      client:
+         certfile:
+         keyfile:
+   attribute:
+      names: ['uid','member']
+      converters:
+         - name:
+           value:
+      maps:
+         groups:
+            - name:
+              value:
+
+affiliations:
+   vyapar:
+    - tlsca
+    - ca
+
+signing:
+    default:
+      usage:
+        - digital signature
+      expiry: 131400h
+    profiles:
+      ca:
+         usage:
+           - cert sign
+           - crl sign
+         expiry: 131400h
+         caconstraint:
+           isca: true
+           maxpathlen: 0
+
+csr:
+   cn: rootca.vyapar.bcngame.in
+   keyrequest:
+     algo: ecdsa
+     size: 256
+   names:
+      - C: IN
+        ST: MAHARASHRA
+        L:  MUMBAI
+        O:  BCN DEMO VYAPAR
+        OU: ROOT-CA-BlockChain Projects
+   hosts:
+      - rootca.vyapar.bcngame.in
+   ca:
+      expiry: 131400h
+      pathlength: 1
+
+idemix:
+  rhpoolsize: 1000
+  nonceexpiration: 15s
+  noncesweepinterval: 15m
+
+bccsp:
+    default: SW
+    sw:
+        hash: SHA2
+        security: 256
+        filekeystore:
+            keystore: msp/keystore
+cacount:
+cafiles:
+
+intermediate:
+  parentserver:
+    url:
+    caname:
+
+  enrollment:
+    hosts:
+    profile:
+    label:
+
+  tls:
+    certfiles:
+    client:
+      certfile:
+      keyfile:
+
+cfg:
+  identities:
+    passwordattempts: 10
+
+operations:
+    listenAddress: 127.0.0.1:9443
+
+    tls:
+        enabled: false
+        cert:
+            file:
+
+        key:
+            file:
+
+        clientAuthRequired: false
+        clientRootCAs:
+            files: []
+
+metrics:
+    # statsd, prometheus, or disabled
+    provider: disabled
+
+    statsd:
+        network: udp
+        address: 127.0.0.1:8125
+        writeInterval: 10s
+        prefix: server

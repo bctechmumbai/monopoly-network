@@ -1,0 +1,186 @@
+version: "2.4"
+
+networks:
+  blockchain_network:
+    external: true
+    name: ${DOCKER_NETWORK_NAME}
+
+services:
+
+  cli.playstationone:
+
+    extends:
+      file: peers_base.yaml
+      service: cli
+
+    container_name: cli.${ORG_NAME}
+
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - /${FABRIC_CONFIG_PATH}:/etc/hyperledger/fabric
+      - /${PROJECT_ROOT_PATH}:/${PROJECT_ROOT_PATH}
+      - /${PROJECT_NETWORK_PATH}/scripts:/var/hyperledger/fabric/cli/scripts
+      - ${PROJECT_CRYPTO_PATH}/peerOrganizations/${ORG_NAME}/users:/var/hyperledger/fabric/cli/users
+      - ${CHANNEL_TX_OUTPUT_PATH}:/var/hyperledger/fabric/cli/channelArtifacts
+      - ${ORDERER_TLS_CRYPTO_PATH}:/var/hyperledger/fabric/cli/orderer_tls
+      - ${CHAINCODE_PACKAGES}:/var/hyperledger/fabric/cli/chaincode-packages
+      - /${GENESIS_BLOCK_PATH}:/var/hyperledger/fabric/cli/system-genesis-block
+      
+  
+  peer1.playstationone:
+
+    extends:
+      file: peers_base.yaml
+      service: peer
+
+    container_name: peer1.${ORG_NAME}
+    
+    environment:
+      
+      # Peer specific variables
+      - CORE_PEER_ID=peer1.${ORG_NAME}
+      - CORE_PEER_ADDRESS=peer1.${ORG_NAME}:${PEER1_PORT}
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:${PEER1_PORT}
+      - CORE_PEER_CHAINCODEADDRESS=peer1.${ORG_NAME}:${PEER1_CHAINCODELISTENPORT}
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:${PEER1_CHAINCODELISTENPORT}
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer2.${ORG_NAME}:${PEER2_PORT} peer3.${ORG_NAME}:${PEER3_PORT}
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.${ORG_NAME}:${PEER1_PORT}
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer1.${ORG_NAME_SHORT}:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=peer1${ORG_NAME_SHORT}
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=peer1${ORG_NAME_SHORT}Password
+      - CORE_PEER_GOSSIP_ORGLEADER=true
+      - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:9096
+    ports:
+      - ${PEER1_PORT}:${PEER1_PORT}
+      - ${PEER1_CHAINCODELISTENPORT}:${PEER1_CHAINCODELISTENPORT}
+      - 9096:9096
+
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - ${PROJECT_CRYPTO_PATH}/peerOrganizations/${ORG_NAME}/peers/peer1.${ORG_NAME}/msp:/etc/hyperledger/fabric/peer/msp
+      - ${PROJECT_CRYPTO_PATH}/peerOrganizations/${ORG_NAME}/peers/peer1.${ORG_NAME}/tls:/etc/hyperledger/fabric/peer/tls
+      - ${PROJECT_ROOT_PATH}/productionvolumes/peer1.${ORG_NAME}:/var/hyperledger/production
+      # - ${PROJECT_CRYPTO_PATH}/peerOrganizations/${ORG_NAME}/users:/etc/hyperledger/fabric/peer/users
+      # - ${CHANNEL_TX_OUTPUT_PATH}:/etc/hyperledger/fabric/peer/channelArtifacts
+      # - ${ORDERER_TLS_CRYPTO_PATH}:/etc/hyperledger/fabric/peer/orderer_tls
+      # - ${CHAINCODE_PACKAGES}:/etc/hyperledger/fabric/peer/chaincode
+    
+    depends_on:
+      - couchdb.peer1.${ORG_NAME_SHORT}
+    
+    
+  couchdb.peer1.playstationone:
+    container_name: couchdb.peer1.${ORG_NAME}
+    image: apache/couchdb:${COUCHDB_VERSION}
+    environment:
+      - COUCHDB_USER=peer1${ORG_NAME_SHORT}
+      - COUCHDB_PASSWORD=peer1${ORG_NAME_SHORT}Password
+    ports:
+      - ${COUCH1_PORT}:5984
+
+      
+    networks:
+      - blockchain_network
+
+
+  peer2.playstationone:
+
+    extends:
+      file: peers_base.yaml
+      service: peer
+    
+    container_name: peer2.${ORG_NAME}
+    
+    environment:
+  
+      - CORE_PEER_ID=peer2.${ORG_NAME}
+      - CORE_PEER_ADDRESS=peer2.${ORG_NAME}:${PEER2_PORT}
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:${PEER2_PORT}
+      - CORE_PEER_CHAINCODEADDRESS=peer2.${ORG_NAME}:${PEER2_CHAINCODELISTENPORT}
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:${PEER2_CHAINCODELISTENPORT}
+
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer2.${ORG_NAME}:${PEER2_PORT}
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.${ORG_NAME}:${PEER1_PORT} peer3.${ORG_NAME}:${PEER3_PORT}
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer2.${ORG_NAME_SHORT}:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=peer2${ORG_NAME_SHORT}
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=peer2${ORG_NAME_SHORT}Password
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+    ports:
+      - ${PEER2_PORT}:${PEER2_PORT}
+      - ${PEER2_CHAINCODELISTENPORT}:${PEER2_CHAINCODELISTENPORT}
+
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - ${PROJECT_CRYPTO_PATH}/peerOrganizations/${ORG_NAME}/peers/peer2.${ORG_NAME}/msp:/etc/hyperledger/fabric/peer/msp
+      - ${PROJECT_CRYPTO_PATH}/peerOrganizations/${ORG_NAME}/peers/peer2.${ORG_NAME}/tls:/etc/hyperledger/fabric/peer/tls
+      - ${PROJECT_ROOT_PATH}/productionvolumes/peer2.${ORG_NAME}:/var/hyperledger/production
+      # - ${PROJECT_CRYPTO_PATH}/peerOrganizations/${ORG_NAME}/users:/etc/hyperledger/fabric/peer/users
+      # - ${CHANNEL_TX_OUTPUT_PATH}:/etc/hyperledger/fabric/peer/channelArtifacts
+      # - ${ORDERER_TLS_CRYPTO_PATH}:/etc/hyperledger/fabric/peer/orderer_tls
+      # - ${CHAINCODE_PACKAGES}:/etc/hyperledger/fabric/peer/chaincode
+
+    depends_on:
+      - couchdb.peer2.${ORG_NAME_SHORT}
+
+  couchdb.peer2.playstationone:
+    container_name: couchdb.peer2.${ORG_NAME}
+    image: apache/couchdb:${COUCHDB_VERSION}
+    environment:
+      - COUCHDB_USER=peer2${ORG_NAME_SHORT}
+      - COUCHDB_PASSWORD=peer2${ORG_NAME_SHORT}Password
+    ports:
+      - ${COUCH2_PORT}:5984
+    networks:
+      - blockchain_network
+
+
+  
+  peer3.playstationone:
+
+    extends:
+      file: peers_base.yaml
+      service: peer
+    
+    container_name: peer3.${ORG_NAME}
+    
+    environment:
+  
+      - CORE_PEER_ID=peer3.${ORG_NAME}
+      - CORE_PEER_ADDRESS=peer3.${ORG_NAME}:${PEER3_PORT}
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:${PEER3_PORT}
+      - CORE_PEER_CHAINCODEADDRESS=peer3.${ORG_NAME}:${PEER3_CHAINCODELISTENPORT}
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:${PEER3_CHAINCODELISTENPORT}
+
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer3.${ORG_NAME}:${PEER3_PORT}
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.${ORG_NAME}:${PEER1_PORT} peer2.${ORG_NAME}:${PEER2_PORT}
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer3.${ORG_NAME_SHORT}:5984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=peer3${ORG_NAME_SHORT}
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=peer3${ORG_NAME_SHORT}Password
+      - CORE_PEER_GOSSIP_ORGLEADER=false
+    ports:
+      - ${PEER3_PORT}:${PEER3_PORT}
+      - ${PEER3_CHAINCODELISTENPORT}:${PEER3_CHAINCODELISTENPORT}
+
+    volumes:
+      - /var/run/docker.sock:/host/var/run/docker.sock
+      - ${PROJECT_CRYPTO_PATH}/peerOrganizations/${ORG_NAME}/peers/peer3.${ORG_NAME}/msp:/etc/hyperledger/fabric/peer/msp
+      - ${PROJECT_CRYPTO_PATH}/peerOrganizations/${ORG_NAME}/peers/peer3.${ORG_NAME}/tls:/etc/hyperledger/fabric/peer/tls
+      - ${PROJECT_ROOT_PATH}/productionvolumes/peer3.${ORG_NAME}:/var/hyperledger/production
+      # - ${PROJECT_CRYPTO_PATH}/peerOrganizations/${ORG_NAME}/users:/etc/hyperledger/fabric/peer/users
+      # - ${CHANNEL_TX_OUTPUT_PATH}:/etc/hyperledger/fabric/peer/channelArtifacts
+      # - ${ORDERER_TLS_CRYPTO_PATH}:/etc/hyperledger/fabric/peer/orderer_tls
+      # - ${CHAINCODE_PACKAGES}:/etc/hyperledger/fabric/peer/chaincode
+
+    depends_on:
+      - couchdb.peer3.${ORG_NAME_SHORT}
+
+  couchdb.peer3.playstationone:
+    container_name: couchdb.peer3.${ORG_NAME}
+    image: apache/couchdb:${COUCHDB_VERSION}
+    environment:
+      - COUCHDB_USER=peer3${ORG_NAME_SHORT}
+      - COUCHDB_PASSWORD=peer3${ORG_NAME_SHORT}Password
+    ports:
+      - ${COUCH3_PORT}:5984
+    networks:
+      - blockchain_network

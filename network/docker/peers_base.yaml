@@ -1,0 +1,95 @@
+version: "2.4"
+ 
+services:
+
+  cli:
+   
+    image:
+      hyperledger/fabric-tools:${FABRIC_VERSION}
+   
+    tty: 
+      true
+   
+    environment:
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+      - CORE_PEER_ID=cli.${ORG_NAME}
+      - CORE_CHAINCODE_KEEPALIVE=10
+      #
+      - CORE_PEER_LOCALMSPID=${ORG_MSP}
+      # - FABRIC_CFG_PATH=/etc/hyperledger/fabric
+      - CORE_PEER_MSPCONFIGPATH=/var/hyperledger/fabric/cli/users/${ORG_NAME_SHORT}Admin@${ORG_NAME}/msp
+      - CORE_PEER_ADDRESS=peer1.${ORG_NAME}:${PEER1_PORT}
+      # enabled TLS
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_TLS_CERT_FILE=/var/hyperledger/fabric/cli/users/${ORG_NAME_SHORT}Admin@${ORG_NAME}/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/var/hyperledger/fabric/cli/users/${ORG_NAME_SHORT}Admin@${ORG_NAME}/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/var/hyperledger/fabric/cli/users/${ORG_NAME_SHORT}Admin@${ORG_NAME}/tls/ca.crt
+      - TLS_CA_CERT_PATH=/var/hyperledger/fabric/cli/orderer_tls/cert.pem
+    
+    working_dir: /var/hyperledger/fabric/cli/
+    
+    command: /bin/bash
+    
+    networks:
+      - blockchain_network
+
+
+  peer:
+  
+    image: 
+      hyperledger/fabric-peer:${FABRIC_VERSION}
+    
+    environment:
+       
+      ## Generic Peer configuration 
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${DOCKER_NETWORK_NAME}
+      - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
+      
+      # enabled TLS
+      - CORE_PEER_TLS_ENABLED=true
+      - CORE_PEER_PROFILE_ENABLED=false
+      - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/peer/tls/server.crt
+      - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/peer/tls/server.key
+      - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/peer/tls/ca.crt
+      
+      # Peer specific variables
+      # - CORE_PEER_ID=peer1.${ORG_NAME}
+      # - CORE_PEER_ADDRESS=peer1.${ORG_NAME}:${PEER1_PORT}
+      # - CORE_PEER_LISTENADDRESS=0.0.0.0:${PEER1_PORT}
+      # - CORE_PEER_CHAINCODEADDRESS=peer1.${ORG_NAME}:${PEER1_CHAINCODELISTENPORT}
+      # - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:${PEER1_CHAINCODELISTENPORT}
+      # - CORE_PEER_GOSSIP_BOOTSTRAP=peer2.${ORG_NAME}:${PEER2_PORT}
+      # - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.fcs.bepds.gov.in:7061 peer1.fps.bepds.gov.in:7071 peer1.fci.bepds.gov.in:7081 peer1.transport.bepds.gov.in:7091 peer1.treasury.bepds.gov.in:7101 peer2.fcs.bepds.gov.in:7062 peer2.fps.bepds.gov.in:7072 peer2.fci.bepds.gov.in:7082 peer2.transport.bepds.gov.in:7092 peer2.treasury.bepds.gov.in:7102
+      # - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.${ORG_NAME}:${PEER1_PORT}
+      - CORE_PEER_LOCALMSPID=${ORG_MSP}
+      # - CORE_OPERATIONS_LISTENADDRESS=peer0.org1.example.com:9444
+      - CORE_METRICS_PROVIDER=prometheus
+      - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:8125
+      - CORE_PEER_GOSSIP_USELEADERELECTION=false
+      #- CORE_PEER_GOSSIP_ORGLEADER=true
+      
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/peer/msp
+      - CORE_CHAINCODE_BUILDER=hyperledger/fabric-ccenv:${FABRIC_CCENV_VERSION}
+      - CORE_CHAINCODE_GOLANG_RUNTIME=hyperledger/fabric-baseos:${FABRIC_BASEOS_VERSION}
+      - CORE_CHAINCODE_JAVA_RUNTIME=hyperledger/fabric-javaenv:${FABRIC_JAVAENV_VERSION}
+      - CORE_CHAINCODE_NODE_RUNTIME=hyperledger/fabric-nodeenv:${FABRIC_NODEENV_VERSION}
+      #
+      - CORE_CHAINCODE_LOGGING_LEVEL=${LOGGING_LEVEL}
+      - CORE_CHAINCODE_LOGGING_SHIM=${LOGGING_LEVEL}
+     
+      - CORE_VM_DOCKER_ATTACHSTDOUT=true
+
+      # CouchDB
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      # - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb.peer1.fci:5984
+      
+
+    working_dir: /etc/hyperledger/fabric/peer/
+    
+    command: peer node start
+    
+    networks:
+      - blockchain_network

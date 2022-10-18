@@ -1,0 +1,22 @@
+global:
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+rule_files:
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+  - job_name: "orderer1.vyapar"
+    static_configs:
+       
+      - targets: ["orderer1.vyapar.bcngame.in:8125"] #,"orderer2.vyapar.bcngame.in:8125","orderer3.vyapar.bcngame.in:8125","orderer4.vyapar.bcngame.in:8125", "orderer5.vyapar.bcngame.in:8125"
+  - job_name: "peer1.playstationone"
+    static_configs:
+      - targets: ["peer1.playstationone.vyapar.bcngame.in:8125"] #, "peer2.playstationone.vyapar.bcngame.in:8125", "peer3.playstationone.vyapar.bcngame.in:8125"
+  - job_name: "peer1.playstationtwo"
+    static_configs:
+      - targets: ["peer1.playstationtwo.vyapar.bcngame.in:8125"] #, "peer2.playstationone.vyapar.bcngame.in:8125", "peer3.playstationone.vyapar.bcngame.in:8125"

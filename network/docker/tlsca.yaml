@@ -1,0 +1,30 @@
+version: "2.4"
+
+networks:
+  blockchain_network:
+    external: true
+    name: ${DOCKER_NETWORK_NAME}
+
+services:
+
+  tlsca:
+    container_name: ${TLS_CA_NAME}
+    image: hyperledger/fabric-ca:1.5.2
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=${TLS_CA_NAME}
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server/${TLS_CA_NAME}-tls-cert.pem
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server/${TLS_CA_NAME}-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server/priv-key.pem
+      - FABRIC_LOGGING_SPEC=debug
+    ports:
+      - ${TLS_CA_SERVER_PORT}:7054
+    working_dir: /etc/hyperledger/fabric-ca-server
+     #command: sh -c 'fabric-ca-server start -b ${TLS_CA_ADMIN_NAME}:${TLS_CA_ADMIN_PASSWORD} -d'
+    command: sh -c 'fabric-ca-server start  -b ${TLS_CA_ADMIN_NAME}:${TLS_CA_ADMIN_PASSWORD} -d' # -u https://${TLS_CA_ADMIN_NAME}:${TLS_CA_ADMIN_PASSWORD}@rootca.mhbcn.gov.in:7054 --intermediate.tls.certfiles /etc/hyperledger/fabric-ca-server/rootca/rootca.mhbcn.gov.in-tls-cert.pem'
+    volumes:
+      - ${TLS_CA_CRYPTO_PATH}/:/etc/hyperledger/fabric-ca-server
+      - ${ROOT_CA_CRYPTO_PATH}/:/etc/hyperledger/fabric-ca-server/rootca
+    networks:
+      - blockchain_network

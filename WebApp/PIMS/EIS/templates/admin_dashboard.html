@@ -1,0 +1,33 @@
+{% extends 'base_admin.html' %}
+{% block title %}
+<title>Dashboard</title>
+{% endblock title %}
+
+{% block content %}
+
+<div class="jumbotron m-3 p-3 border-1">
+    <h1 class="display-4">Hello, {{user}} !</h1>    
+</div>
+<div class="row">
+  <div class="col-lg-6">
+    <h4 class="text-primary">Join Game</h4>
+    {% if vyapargames %}
+    {{ vyapargames|safe }}
+    {% endif %}
+  </div>
+  <div class="col-lg-6">
+    <h4 class="text-success">Already Joined Games (Click to Play)</h4>
+    {% if vyaparjoinedgames %}
+    {{ vyaparjoinedgames|safe }}
+    {% endif %}
+    <h4 class="text-danger">Closed Games (Click to View)</h4>
+    {% if vyaparclosedgames %}
+    {{ vyaparclosedgames|safe }}
+    {% endif %}
+  </div>
+</div>
+
+
+
+
+{%endblock content %}

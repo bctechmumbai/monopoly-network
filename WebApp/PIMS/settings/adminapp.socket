@@ -1,0 +1,8 @@
+[Unit]
+Description=gunicorn socket to trigger adminapp.service
+
+[Socket]
+ListenStream=/run/adminapp.sock
+
+[Install]
+WantedBy=sockets.target

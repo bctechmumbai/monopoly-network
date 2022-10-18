@@ -1,0 +1,371 @@
+################################################################################
+#   SECTION: Capabilities
+################################################################################
+Capabilities:
+    Channel: &ChannelCapabilities
+        V2_0: true
+    Orderer: &OrdererCapabilities
+        V2_0: true
+    Application: &ApplicationCapabilities
+        V2_0: true
+
+################################################################################
+#   Section: Organizations
+################################################################################
+Organizations:
+    - &VYAPAR
+        Name: VYAPARMSP
+        #SkipAsForeign: false
+        ID: VYAPARMSP
+        MSPDir: /blockchain_projects/vyapar/Organizations/ordererOrganizations/vyapar.bcngame.in/msp
+        
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('VYAPARMSP.member')"
+            Writers:
+                Type: Signature
+                Rule: "OR('VYAPARMSP.member')"
+            Admins:
+                Type: Signature
+                Rule: "OR('VYAPARMSP.admin')"
+
+            Endorsement:
+                Type: Signature
+                Rule: "OR('VYAPARMSP.member')"
+
+        OrdererEndpoints:
+            - orderer1.vyapar.bcngame.in:9001 
+            - orderer2.vyapar.bcngame.in:9002
+            - orderer3.vyapar.bcngame.in:9003
+            - orderer4.vyapar.bcngame.in:9004
+            - orderer5.vyapar.bcngame.in:9005
+
+    
+    - &PLAYSTATIONONE
+        Name: PLAYSTATIONONEMSP
+        ID: PLAYSTATIONONEMSP
+        MSPDir: /blockchain_projects/vyapar/Organizations/peerOrganizations/playstationone.vyapar.bcngame.in/msp
+        
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('PLAYSTATIONONEMSP.admin', 'PLAYSTATIONONEMSP.peer', 'PLAYSTATIONONEMSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('PLAYSTATIONONEMSP.admin', 'PLAYSTATIONONEMSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('PLAYSTATIONONEMSP.admin')"
+            Endorsement:
+                Type: Signature
+                Rule: "OR('PLAYSTATIONONEMSP.peer')"
+
+        AnchorPeers:
+            - Host: peer1.playstationone.vyapar.bcngame.in
+              Port: 9011
+            - Host: peer2.playstationone.vyapar.bcngame.in
+              Port: 9012
+            - Host: peer3.playstationone.vyapar.bcngame.in
+              Port: 9013
+
+    - &PLAYSTATIONTWO
+        Name: PLAYSTATIONTWOMSP
+        ID: PLAYSTATIONTWOMSP
+        MSPDir: /blockchain_projects/vyapar/Organizations/peerOrganizations/playstationtwo.vyapar.bcngame.in/msp
+        
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('PLAYSTATIONTWOMSP.admin', 'PLAYSTATIONTWOMSP.peer', 'PLAYSTATIONTWOMSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('PLAYSTATIONTWOMSP.admin', 'PLAYSTATIONTWOMSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('PLAYSTATIONTWOMSP.admin')"
+            Endorsement:
+                Type: Signature
+                Rule: "OR('PLAYSTATIONTWOMSP.peer')"
+
+        AnchorPeers:
+            - Host: peer1.playstationtwo.vyapar.bcngame.in
+              Port: 9014
+            - Host: peer2.playstationtwo.vyapar.bcngame.in
+              Port: 9015
+            - Host: peer3.playstationtwo.vyapar.bcngame.in
+              Port: 9016
+
+################################################################################
+#   SECTION: Application
+################################################################################
+Application: &ApplicationDefaults
+    # ACLs: &ACLsDefault
+    #     # This section provides defaults for policies for various resources
+    #     # in the system. These "resources" could be functions on system chaincodes
+    #     # (e.g., "GetBlockByNumber" on the "qscc" system chaincode) or other resources
+    #     # (e.g.,who can receive Block events). This section does NOT specify the resource's
+    #     # definition or API, but just the ACL policy for it.
+    #     #
+    #     # Users can override these defaults with their own policy mapping by defining the
+    #     # mapping under ACLs in their channel definition
+
+    #     #---New Lifecycle System Chaincode (_lifecycle) function to policy mapping for access control--#
+
+    #     # ACL policy for _lifecycle's "CheckCommitReadiness" function
+    #     _lifecycle/CheckCommitReadiness: /Channel/Application/Writers
+
+    #     # ACL policy for _lifecycle's "CommitChaincodeDefinition" function
+    #     _lifecycle/CommitChaincodeDefinition: /Channel/Application/Writers
+
+    #     # ACL policy for _lifecycle's "QueryChaincodeDefinition" function
+    #     _lifecycle/QueryChaincodeDefinition: /Channel/Application/Readers
+
+    #     # ACL policy for _lifecycle's "QueryChaincodeDefinitions" function
+    #     _lifecycle/QueryChaincodeDefinitions: /Channel/Application/Readers
+
+    #     #---Lifecycle System Chaincode (lscc) function to policy mapping for access control---#
+
+    #     # ACL policy for lscc's "getid" function
+    #     lscc/ChaincodeExists: /Channel/Application/Readers
+
+    #     # ACL policy for lscc's "getdepspec" function
+    #     lscc/GetDeploymentSpec: /Channel/Application/Readers
+
+    #     # ACL policy for lscc's "getccdata" function
+    #     lscc/GetChaincodeData: /Channel/Application/Readers
+
+    #     # ACL Policy for lscc's "getchaincodes" function
+    #     lscc/GetInstantiatedChaincodes: /Channel/Application/Readers
+
+    #     #---Query System Chaincode (qscc) function to policy mapping for access control---#
+
+    #     # ACL policy for qscc's "GetChainInfo" function
+    #     qscc/GetChainInfo: /Channel/Application/Readers
+
+    #     # ACL policy for qscc's "GetBlockByNumber" function
+    #     qscc/GetBlockByNumber: /Channel/Application/Readers
+
+    #     # ACL policy for qscc's  "GetBlockByHash" function
+    #     qscc/GetBlockByHash: /Channel/Application/Readers
+
+    #     # ACL policy for qscc's "GetTransactionByID" function
+    #     qscc/GetTransactionByID: /Channel/Application/Readers
+
+    #     # ACL policy for qscc's "GetBlockByTxID" function
+    #     qscc/GetBlockByTxID: /Channel/Application/Readers
+
+    #     #---Configuration System Chaincode (cscc) function to policy mapping for access control---#
+
+    #     # ACL policy for cscc's "GetConfigBlock" function
+    #     cscc/GetConfigBlock: /Channel/Application/Readers
+
+    #     # ACL policy for cscc's "GetConfigTree" function
+    #     cscc/GetConfigTree: /Channel/Application/Readers
+
+    #     # ACL policy for cscc's "SimulateConfigTreeUpdate" function
+    #     cscc/SimulateConfigTreeUpdate: /Channel/Application/Readers
+
+    #     #---Miscellanesous peer function to policy mapping for access control---#
+
+    #     # ACL policy for invoking chaincodes on peer
+    #     peer/Propose: /Channel/Application/Writers
+
+    #     # ACL policy for chaincode to chaincode invocation
+    #     peer/ChaincodeToChaincode: /Channel/Application/Readers
+
+    #     #---Events resource to policy mapping for access control###---#
+
+    #     # ACL policy for sending block events
+    #     event/Block: /Channel/Application/Readers
+
+    #     # ACL policy for sending filtered block events
+    #     event/FilteredBlock: /Channel/Application/Readers
+
+    # # Organizations lists the orgs participating on the application side of the
+    # # network.
+
+    Organizations:
+    # Policies defines the set of policies at this level of the config tree
+    # For Application policies, their canonical path is
+    #   /Channel/Application/<PolicyName>
+    Policies: &ApplicationDefaultPolicies
+
+        LifecycleEndorsement:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Endorsement"
+        Endorsement:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Endorsement"
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+
+    Capabilities:
+        <<: *ApplicationCapabilities
+
+################################################################################
+#   SECTION: Orderer
+################################################################################
+Orderer: &OrdererDefaults
+    OrdererType: etcdraft
+    Addresses:
+        - orderer1.vyapar.bcngame.in:9001
+        - orderer2.vyapar.bcngame.in:9002
+        - orderer3.vyapar.bcngame.in:9003
+        - orderer4.vyapar.bcngame.in:9004
+        - orderer5.vyapar.bcngame.in:9005
+   
+    BatchTimeout: 1s
+    BatchSize:
+        MaxMessageCount: 100
+        AbsoluteMaxBytes: 5 MB
+        PreferredMaxBytes: 5 MB
+
+    # Max Channels is the maximum number of channels to allow on the ordering
+    # network. When set to 0, this implies no maximum number of channels.
+    MaxChannels: 0
+
+    # Kafka:
+    #     # Brokers: A list of Kafka brokers to which the orderer connects. Edit
+    #     # this list to identify the brokers of the ordering service.
+    #     # NOTE: Use IP:port notation.
+    #     Brokers:
+    #         - kafka0:9092
+    #         - kafka1:9092
+    #         - kafka2:9092
+
+
+    EtcdRaft:
+        Consenters:
+            - Host: orderer1.vyapar.bcngame.in
+              Port: 9001
+              ClientTLSCert: /blockchain_projects/vyapar/Organizations/ordererOrganizations/vyapar.bcngame.in/orderers/orderer1.vyapar.bcngame.in/tls/server.crt
+
+              ServerTLSCert: /blockchain_projects/vyapar/Organizations/ordererOrganizations/vyapar.bcngame.in/orderers/orderer1.vyapar.bcngame.in/tls/server.crt
+
+            - Host: orderer2.vyapar.bcngame.in
+              Port: 9002
+              ClientTLSCert: /blockchain_projects/vyapar/Organizations/ordererOrganizations/vyapar.bcngame.in/orderers/orderer2.vyapar.bcngame.in/tls/server.crt
+              ServerTLSCert: /blockchain_projects/vyapar/Organizations/ordererOrganizations/vyapar.bcngame.in/orderers/orderer2.vyapar.bcngame.in/tls/server.crt
+            
+            - Host: orderer3.vyapar.bcngame.in
+              Port: 9003
+              ClientTLSCert: /blockchain_projects/vyapar/Organizations/ordererOrganizations/vyapar.bcngame.in/orderers/orderer3.vyapar.bcngame.in/tls/server.crt
+              ServerTLSCert: /blockchain_projects/vyapar/Organizations/ordererOrganizations/vyapar.bcngame.in/orderers/orderer3.vyapar.bcngame.in/tls/server.crt
+            
+            - Host: orderer4.vyapar.bcngame.in
+              Port: 9004
+              ClientTLSCert: /blockchain_projects/vyapar/Organizations/ordererOrganizations/vyapar.bcngame.in/orderers/orderer4.vyapar.bcngame.in/tls/server.crt
+              ServerTLSCert: /blockchain_projects/vyapar/Organizations/ordererOrganizations/vyapar.bcngame.in/orderers/orderer4.vyapar.bcngame.in/tls/server.crt
+            
+            - Host: orderer5.vyapar.bcngame.in
+              Port: 9005
+              ClientTLSCert: /blockchain_projects/vyapar/Organizations/ordererOrganizations/vyapar.bcngame.in/orderers/orderer5.vyapar.bcngame.in/tls/server.crt
+              ServerTLSCert: /blockchain_projects/vyapar/Organizations/ordererOrganizations/vyapar.bcngame.in/orderers/orderer5.vyapar.bcngame.in/tls/server.crt
+
+        Options:
+            # TickInterval is the time interval between two Node.Tick invocations.
+            TickInterval: 500ms
+
+            # ElectionTick is the number of Node.Tick invocations that must pass
+            # between elections. That is, if a follower does not receive any
+            # message from the leader of current term before ElectionTick has
+            # elapsed, it will become candidate and start an election.
+            # ElectionTick must be greater than HeartbeatTick.
+            ElectionTick: 10
+
+            # HeartbeatTick is the number of Node.Tick invocations that must
+            # pass between heartbeats. That is, a leader sends heartbeat
+            # messages to maintain its leadership every HeartbeatTick ticks.
+            HeartbeatTick: 1
+
+            # MaxInflightBlocks limits the max number of in-flight append messages
+            # during optimistic replication phase.
+            MaxInflightBlocks: 5
+
+            # SnapshotIntervalSize defines number of bytes per which a snapshot is taken
+            SnapshotIntervalSize: 200 MB
+
+
+
+    Organizations:
+    # Policies defines the set of policies at this level of the config tree
+    # For Orderer policies, their canonical path is
+    #   /Channel/Orderer/<PolicyName>
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        # BlockValidation specifies what signatures must be included in the block
+        # from the orderer for the peer to validate it.
+        BlockValidation:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+    Capabilities:
+        <<: *OrdererCapabilities
+
+################################################################################
+#   CHANNEL Defaults
+################################################################################
+Channel: &ChannelDefaults
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+    Capabilities:
+        <<: *ChannelCapabilities
+
+################################################################################
+#   Profile
+################################################################################
+# https://github:com/hyperledger/fabric/blob/master/sampleconfig/configtx.yaml
+
+Profiles:
+    # Profile used to create Genesis block for Orderer #
+    OrdererGenesis:
+        <<: *ChannelDefaults
+        Orderer:
+            <<: *OrdererDefaults
+            Organizations:
+                - *VYAPAR
+            Capabilities:
+                <<: *OrdererCapabilities
+    
+        Consortiums:
+         VyaparConsortium:
+                Organizations:
+                    - *PLAYSTATIONONE
+                  
+    vyaparchannel:
+        <<: *ChannelDefaults
+        Orderer:
+            <<: *OrdererDefaults
+            Organizations:
+                - *VYAPAR
+            Capabilities:
+                <<: *ApplicationCapabilities
+        Consortium: VyaparConsortium
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *PLAYSTATIONONE
+               

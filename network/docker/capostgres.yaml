@@ -1,0 +1,22 @@
+version: '3.1'
+
+networks:
+  blockchain_network:
+    external: true
+    name: ${DOCKER_NETWORK_NAME}
+
+services:
+  postgres.vyapar.bcngame.in:
+    container_name: postgres.vyapar.bcngame.in
+    image: postgres:${PG_VERSION}
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+        - 6563:5432
+    volumes:         
+      - ${PROJECT_ROOT_PATH}/productionvolumes/postgres.vyapar.bcngame.in:/var/lib/postgresql/data/pgdata
+    networks:
+      - blockchain_network
+  

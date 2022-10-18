@@ -1,0 +1,118 @@
+{% extends 'base_admin.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}
+<title> Game</title>
+{% endblock title %}
+
+{% block content %}
+<form action="{%url 'vyapaar_loadgame' game_id %}" class="px-5" method="POST" autocomplete="on">
+    {% csrf_token %}
+<div class="ml-3 mr-3 mt-5 mb-5"> <!-- -->
+    
+    <div class="row">
+        <div class="col-lg-8">           
+            <div class="card">
+                <div class="card-header">
+                    Game  - {{ game_id }} [{{ gameDateTime }}]
+                    {% if  closed  == False %}
+                    {% if endgame %}
+                        <span class="float-right">{{ endgame|safe }}</span>
+                    {% endif %}
+                    {% endif %}
+                    
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            Wallet Balance
+                        </div>
+                        <div class="col-lg-9">
+                            {% if walletBalance %}
+                                <span class="text-success mt-3 p-3">{{ walletBalance|safe }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            Current Place
+                        </div>
+                        <div class="col-lg-3">
+                            
+                            {% if player_current_location %}
+                            <input type="hidden" name="currentPlace" value="{{ currentPlace }}" />
+                            <span class="text-success mt-3 p-3">{{ player_current_location|safe }}</span>
+                            <!-- <span class="text-primary mt-3 p-3">Cost ( {{ current_location_cost|safe }}), Rent ( {{ current_location_rent|safe }})</span> -->
+                            {% endif %}
+                            
+                        </div>
+                        <div class="card align-top">
+                            <div class="card-header">Places Own</div>
+                            <div class="card-body">
+                                {{ placesowned|safe }}      
+                            </div>
+                           
+                        </div>
+                    </div>
+                    
+                    {% if  closed  == False %}
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <button type="submit" class="btn btn-success b-btn" name="btnPlay" id="btnPlay">Play</button>
+                        </div>
+                        <div class="col-lg-3">
+                            <button type="submit" class="btn btn-primary b-btn" name="btnPurchase" id="btnPurchase">Purchase</button>
+                        </div>
+                       
+                    </div>
+                    {% else %}
+                    <h3>Winner : <span class="text-success">{{ winner }}</span></h3>
+                    
+                    {% endif %}
+                </div>
+            </div>            
+            
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    Players
+                </div>
+                <div class="card-body">
+                    <ul>
+                        {{ players|safe }}                
+                    </ul>
+                </div>
+            </div>
+            
+            </div>
+        </div>
+    </div>
+    <!-- <div class = "row">
+        <div class="col-lg-12">
+            {% if bcmsg %}
+                <span class="alert alert-success mt-3 mb-3 p-3">{{ bcmsg|safe }}</span>
+            {% endif %}
+            {% if error %}
+            <span class="alert alert-danger mt-3 mb-3 p-3">{{ error|safe }}</span>
+            {% endif %}
+        </div>
+    </div> -->
+    <div class="row mt-4">
+        <div class="col-lg-12">            
+            {{ gameboard|safe }}                
+        </div>
+    </div>
+    {% if error %}
+    <script>
+        alert("{{error |safe }}")
+    </script>
+    {% endif %}
+    {% if bcmsg %}
+    <script>
+        alert("{{ bcmsg|safe }}")
+    </script>
+    {% endif %}
+</div>
+</form>
+{%endblock content %}

@@ -1,0 +1,17 @@
+version: "2.4"
+
+networks:
+  blockchain_network:
+    external: true
+    name: vyapar_network
+
+services:
+
+  alpine:
+    container_name: alpine
+    image: alpine:latest            
+    command: sh 
+    tty: 
+      true        
+    networks:
+      - blockchain_network
