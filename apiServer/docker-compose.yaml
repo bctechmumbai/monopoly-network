@@ -1,33 +1,37 @@
-version: "2.4"
+version: "3.0"
 
+networks:
+  vyapar_network:
 services:
 
-  webapi-mhbcn-nic-in:
-    container_name: webapi-mhbcn-nic-in
-    image: webapi-mhbcn-nic-in:latest
+  webapi-vyapar-mhbcn-nic-in:
+    container_name: webapi-vyapar-mhbcn-nic-in
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    image: webapi-vyapar-mhbcn-nic-in:latest
     # environment:
-      # - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server      
+    # - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server      
     ports:
-      - 8080:8080
-      - 8081:8081
-    working_dir: /usr/src/apiServer     
+      - 8081:8080
+    working_dir: /usr/src/apiServer
+    command: sh -c  "node apiserver.js"
     extra_hosts:
-      - "orderer1.mhbcn.gov.in:10.152.2.122"
-      - "orderer2.mhbcn.gov.in:10.152.2.122"
-      - "orderer3.mhbcn.gov.in:10.152.2.122"
-      - "orderer4.mhbcn.gov.in:10.152.2.122"
-      - "orderer5.mhbcn.gov.in:10.152.2.122"
-      - "peer1.fcs.bepds.gov.in:10.152.2.122"   
-      - "peer2.fcs.bepds.gov.in:10.152.2.122"
-      - "peer1.fps.bepds.gov.in:10.152.2.122"   
-      - "peer2.fps.bepds.gov.in:10.152.2.122"
-      - "peer1.fci.bepds.gov.in:10.152.2.122"   
-      - "peer2.fci.bepds.gov.in:10.152.2.122"
-      - "peer1.transport.bepds.gov.in:10.152.2.122"   
-      - "peer2.transport.bepds.gov.in:10.152.2.122"
-      - "peer1.treasury.bepds.gov.in:10.152.2.122"   
-      - "peer2.treasury.bepds.gov.in:10.152.2.122"
-      - "ca.mhbcn.gov.in:10.152.2.122"
-      - "tlsca.mhbcn.gov.in:10.152.2.122"
-    command: sh -c  "node depotapiserver.js & node apiserver.js" 
-      
+      - "peer1.playstationone.vyapar.bcngame.in:10.152.2.120"
+      - "peer2.playstationone.vyapar.bcngame.in:10.152.2.120"
+      - "peer3.playstationone.vyapar.bcngame.in:10.152.2.120"
+
+      - "peer1.playstationtwo.vyapar.bcngame.in:10.152.2.120"
+      - "peer2.playstationtwo.vyapar.bcngame.in:10.152.2.120"
+      - "peer3.playstationtwo.vyapar.bcngame.in:10.152.2.120"
+      - "peer4.playstationtwo.vyapar.bcngame.in:10.152.2.120"
+
+      - "orderer1.vyapar.bcngame.in:10.152.2.120"
+      - "orderer2.vyapar.bcngame.in:10.152.2.120"
+      - "orderer3.vyapar.bcngame.in:10.152.2.120"
+      - "orderer4.vyapar.bcngame.in:10.152.2.120"
+      - "orderer5.vyapar.bcngame.in:10.152.2.120"
+
+      - "ca.vyapar.bcngame.in:10.152.2.120"
+      - "tlsca.vyapar.bcngame.in:10.152.2.120"

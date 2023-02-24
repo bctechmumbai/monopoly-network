@@ -17,7 +17,7 @@ COPY . .
 
 ENV DB_URL postgres://postgres:postgres@10.152.2.122:6543/webapps_mhbcn
 
-EXPOSE 8080 8081
+EXPOSE 8080
 
 # CMD [ "bin/bash", "runall.sh" ]
-# CMD ["node", "apiserver.js", "node", "depotapiserver.js"]
+CMD ["node", "apiserver.js"]

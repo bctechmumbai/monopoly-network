@@ -20,24 +20,26 @@ print("Starting django from " + str(BASE_DIR))
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY','django-insecure-v!rixasg-9_5zkht7%s*u3u^xd)xp^!#y1cw+b9*l7e_as6)0k')
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY', 'django-insecure-v!rixasg-9_5zkht7%s*u3u^xd)xp^!#y1cw+b9*l7e_as6)0k')
 # BLOCKCHAIN_API_URL = "http://10.152.2.56:8080/api/"
 #BLOCKCHAIN_API_URL = "http://10.152.2.122:8081/api/depotmanager/"
-API_URL = "http://10.152.2.120:8080/api/"
-BLOCKCHAIN_API_URL = "http://10.152.32.243:8081/api/depotmanager/"
+VYAPAR_API_URL = os.environ['VYAPAR_API_URL'] if 'VYAPAR_API_URL' in os.environ else "http://webapi.vyapar.mhbcn.gov.in:8081/api/"
+
+# BLOCKCHAIN_API_URL = "http://10.152.32.243:8081/api/depotmanager/"
 # API_URL = "http://localhost:8080/api/"
-VYAPAR_API_URL = "http://10.152.2.120:8080/api/vyapar/"
+
+# VYAPAR_API_URL = "http://webapi.vyapar.mhbcn.gov.in:8081/api/vyapar/"
 # API_KEY = 'x-access-token'
-# API_KEY_VALUE = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZW1haWwxQGdvdi5pbiIsImlhdCI6MTY0NTYwODM2MywiZXhwIjoxMDI4NTYwODM2M30.0GCjlOAadzNXUKbMBN8hxPUbXrdixinGPY3ogjfp2M' 
+# API_KEY_VALUE = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZW1haWwxQGdvdi5pbiIsImlhdCI6MTY0NTYwODM2MywiZXhwIjoxMDI4NTYwODM2M30.0GCjlOAadzNXUKbMBN8hxPUbXrdixinGPY3ogjfp2M'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 #DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE=False
+CSRF_COOKIE_SECURE = False
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 ALLOWED_HOSTS = ['*']
-
 
 
 ROOT_URLCONF = 'PIMS.urls'
@@ -69,7 +71,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'EIS',# 'EIS.apps.EisConfig'
+    'EIS',  # 'EIS.apps.EisConfig'
     'rest_framework',
     'crispy_forms',
 ]
@@ -82,7 +84,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
+
 ]
 
 ROOT_URLCONF = 'PIMS.urls'
@@ -152,8 +154,6 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-  
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -162,8 +162,9 @@ STATIC_URL = '/static/'
 
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static-files')
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static-files') # 'D:\\Running-Projects\\blockchain_network\\WebApp\\PIMS\\static' # os.path.join(BASE_DIR, '/')
-print(STATIC_ROOT)  
+# 'D:\\Running-Projects\\blockchain_network\\WebApp\\PIMS\\static' # os.path.join(BASE_DIR, '/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static-files')
+print(STATIC_ROOT)
 
 
 STATICFILES_DIRS = [

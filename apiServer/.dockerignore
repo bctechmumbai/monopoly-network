@@ -1,2 +1,9 @@
 node_modules
 npm-debug.log
+docker-compose.yml
+Dockerfile
+sonar-project.properties
+.gitignore
+.scannerwork
+.vscode 
+.dockerignore
